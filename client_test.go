@@ -1,9 +1,9 @@
-package getstream_test
+package getstream
 
 import (
 	"testing"
-	// . "github.com/hyperworks/go-getstream"
-	a "github.com/stretchr/testify/assert"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestClient_BaseURL(t *testing.T) {
@@ -15,13 +15,6 @@ func TestClient_BaseURL(t *testing.T) {
 
 	for location, url := range locations {
 		client := ConnectTestClient(location)
-		a.Equal(t, url, client.BaseURL().String())
+		assert.Equal(t, url, client.BaseURL().String())
 	}
-}
-
-func TestClient_Feed(t *testing.T) {
-	client := ConnectTestClient("")
-	feed := client.Feed(TestFeedSlug.Slug, TestFeedSlug.ID)
-	a.Equal(t, TestFeedSlug.WithToken(TestToken), feed.Slug())
-	a.Equal(t, TestFeedSignature, feed.Slug().Signature())
 }

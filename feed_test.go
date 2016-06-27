@@ -1,40 +1,81 @@
-package getstream_test
+package getstream
 
 import (
 	"testing"
-	// . "github.com/hyperworks/go-getstream"
-	a "github.com/stretchr/testify/assert"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFeed(t *testing.T) {
-	if testing.Short() {
-		t.Skip()
-	}
-
-	client := ConnectTestClient("")
-	feed := client.Feed(TestFeedSlug.Slug, TestFeedSlug.ID)
+	client := ConnectTestClient("eu-west")
+	feed := client.Feed("user", "john2")
 	activity := NewTestActivity()
-
-	t.Log("adding activity...")
 	addedActivity, e := feed.AddActivity(activity)
-	a.NoError(t, e)
-	a.NotEqual(t, activity, addedActivity, "AddActivity should not modify existing instance.")
-	a.NotNil(t, addedActivity)
-	a.NotEmpty(t, addedActivity.ID)
+	assert.Nil(t, e)
+	assert.NotEqual(t, activity, addedActivity, "AddActivity should not modify existing instance.")
+	assert.NotNil(t, addedActivity)
+	assert.NotEmpty(t, addedActivity.ID)
 
-	t.Log("listing added activities...")
 	activities, e := feed.Activities(nil)
-	a.NoError(t, e)
-	a.NotEmpty(t, activities)
-	a.Len(t, activities, 1) // otherwise we might be getting result from another test run.
-	a.Equal(t, addedActivity.ID, activities[0].ID)
+	assert.NoError(t, e)
+	assert.NotEmpty(t, activities)
+	assert.Len(t, activities, 1) // otherwise we might be getting result from another test run.
+	assert.Equal(t, addedActivity.ID, activities[0].ID)
 
-	t.Log("removing added activity...")
 	e = feed.RemoveActivity(addedActivity.ID)
-	a.NoError(t, e)
+	assert.NoError(t, e)
 
-	t.Log("listing added activities again...")
 	activities, e = feed.Activities(nil)
-	a.NoError(t, e)
-	a.Empty(t, activities)
+	assert.NoError(t, e)
+	assert.Empty(t, activities)
+
+}
+
+func TestFollow(t *testing.T) {
+	client := ConnectTestClient("eu-west")
+	john := client.Feed("user", "john2")
+	timeline := client.Feed("Test", "test3")
+	activity := NewTestActivity()
+	addedActivity, e := timeline.AddActivity(activity)
+	assert.Nil(t, e)
+
+	e = john.Follow("Test", "test3")
+	assert.NoError(t, e)
+	activities, e := john.Activities(nil)
+	assert.NoError(t, e)
+	assert.NotEmpty(t, activities)
+	assert.Len(t, activities, 1) // otherwise we might be getting result from another test run.
+	assert.Equal(t, addedActivity.ID, activities[0].ID)
+
+	following, e := john.Following(nil)
+	assert.NoError(t, e)
+	assert.NotEmpty(t, following)
+	assert.Len(t, following, 1) // otherwise we might be getting result from another test run.
+
+	followers, e := timeline.Followers(nil)
+	assert.NoError(t, e)
+	assert.NotEmpty(t, followers)
+	assert.Len(t, followers, 1) // otherwise we might be getting result from another test run.
+
+	e = john.Unfollow("Test", "test3")
+	assert.NoError(t, e)
+	activities, e = john.Activities(nil)
+	assert.NoError(t, e)
+	assert.Empty(t, activities)
+
+	following, e = john.Following(nil)
+	assert.NoError(t, e)
+	assert.Empty(t, following)
+
+	followers, e = timeline.Followers(nil)
+	assert.NoError(t, e)
+	assert.Empty(t, followers)
+
+	e = timeline.RemoveActivity(addedActivity.ID)
+	assert.NoError(t, e)
+
+}
+
+func TestOptions(t *testing.T) {
+
 }

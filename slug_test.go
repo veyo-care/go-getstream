@@ -1,11 +1,12 @@
-package getstream_test
+package getstream
 
 import (
 	"encoding/json"
 	"fmt"
-	. "github.com/hyperworks/go-getstream"
-	a "github.com/stretchr/testify/assert"
+
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var _ json.Marshaler = Slug{}
@@ -13,8 +14,8 @@ var _ json.Unmarshaler = &Slug{}
 var _ fmt.Stringer = Slug{}
 
 func TestSlug(t *testing.T) {
-	a.Equal(t, "test:456", Slug{"test", "456", ""}.String())
-	a.Equal(t, "test:123 token", Slug{"test", "123", "token"}.String())
+	assert.Equal(t, "test:456", Slug{"test", "456", ""}.String())
+	assert.Equal(t, "test:123 token", Slug{"test", "123", "token"}.String())
 }
 
 func TestSlug_Valid(t *testing.T) {
@@ -24,7 +25,7 @@ func TestSlug_Valid(t *testing.T) {
 	}
 
 	for _, slug := range valids {
-		a.True(t, slug.Valid())
+		assert.True(t, slug.Valid())
 	}
 
 	invalids := []Slug{
@@ -35,7 +36,7 @@ func TestSlug_Valid(t *testing.T) {
 	}
 
 	for _, slug := range invalids {
-		a.False(t, slug.Valid())
+		assert.False(t, slug.Valid())
 	}
 }
 
@@ -47,8 +48,8 @@ func TestSlug_JSON(t *testing.T) {
 
 	for slug, str := range marshals {
 		bytes, e := json.Marshal(slug)
-		a.NoError(t, e, "failed to marshal slug: "+slug.String())
-		a.Equal(t, str, string(bytes))
+		assert.NoError(t, e, "failed to marshal slug: "+slug.String())
+		assert.Equal(t, str, string(bytes))
 	}
 
 	unmarshals := map[string]Slug{
@@ -60,7 +61,7 @@ func TestSlug_JSON(t *testing.T) {
 	for str, slug := range unmarshals {
 		result := Slug{}
 		e := json.Unmarshal([]byte(str), &result)
-		a.NoError(t, e, "failed to unmarshal json: "+str)
-		a.Equal(t, slug, result)
+		assert.NoError(t, e, "failed to unmarshal json: "+str)
+		assert.Equal(t, slug, result)
 	}
 }

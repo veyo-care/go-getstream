@@ -9,14 +9,14 @@ WIP [getstream.io](getstream.io) client in pure GO.
 
 * Authentication
 * Add, list all, and remove an activity.
+* Follows/unfollows. 
 
 # YET TO WORK
-
-* Listing/paging options.
-* Follows/unfollows.
-* Subscription.
-* Aggregated feeds support.
-* Notification feeds support.
+* multiple adding, follow
+* Listing/paging options. 
+* Subscription. ??
+* Aggregated feeds support. == related to listing, paging 
+* Notification feeds support. == get read seen ??
 
 # NICE TO HAVE
 

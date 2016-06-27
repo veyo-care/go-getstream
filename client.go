@@ -50,7 +50,7 @@ func (c *Client) Feed(slug, id string) *Feed {
 	}
 }
 
-func (c *Client) get(result interface{}, path string, slug Slug) error {
+func (c *Client) get(result interface{}, path string, slug Slug, opt *Options) error {
 	return c.request(result, "GET", path, slug, nil)
 }
 
