@@ -8,7 +8,7 @@ var (
 	TestAppID     = os.Getenv("GETSTREAM_APPID")
 )
 
-func ConnectTestClient(region string) *Client {
+func ConnectTestClient(region string) Client {
 	return Connect(TestAPIKey, TestAPISecret, TestAppID, region)
 }
 

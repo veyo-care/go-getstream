@@ -33,7 +33,7 @@ func TestFeed(t *testing.T) {
 
 func TestFollow(t *testing.T) {
 	client := ConnectTestClient("eu-west")
-	john := client.Feed("user", "john2")
+	john := client.Feed("user", "john3")
 	timeline := client.Feed("Test", "test3")
 	activity := NewTestActivity()
 	addedActivity, e := timeline.AddActivity(activity)

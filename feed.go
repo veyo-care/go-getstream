@@ -1,14 +1,16 @@
 package getstream
 
 type Feed struct {
-	*Client
+	Client
 	slug Slug
 }
 
 func (f *Feed) Slug() Slug { return f.slug }
 
+func (f *Feed) Secret() string { return f.Client.Secret() }
+
 func (f *Feed) AddActivity(activity *Activity) (*Activity, error) {
-	activity = SignActivity(f.secret, activity)
+	activity = SignActivity(f.Secret(), activity)
 
 	result := &Activity{}
 	e := f.post(result, f.url(), f.slug, activity)
@@ -18,7 +20,7 @@ func (f *Feed) AddActivity(activity *Activity) (*Activity, error) {
 func (f *Feed) AddActivities(activities []*Activity) error {
 	signeds := make([]*Activity, len(activities), len(activities))
 	for i, activity := range activities {
-		signeds[i] = SignActivity(f.secret, activity)
+		signeds[i] = SignActivity(f.Secret(), activity)
 	}
 
 	// TODO: A result type to recieve the listing result.
@@ -39,7 +41,7 @@ func (f *Feed) RemoveActivity(id string) error {
 func (f *Feed) Follow(feed, id string) error {
 
 	followedSlug := Slug{feed, id, ""}
-	signedFollowingSlug := SignSlug(f.secret, f.slug)
+	signedFollowingSlug := SignSlug(f.Secret(), f.slug)
 	data := Follow{Target: followedSlug.String()}
 	e := f.post(nil, f.url()+"following/", signedFollowingSlug, data)
 	return e

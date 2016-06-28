@@ -9,7 +9,18 @@ import (
 	"net/url"
 )
 
-type Client struct {
+type Client interface {
+	BaseURL() *url.URL
+	Feed(slug, id string) *Feed
+	get(result interface{}, path string, slug Slug, opt *Options) error
+	post(result interface{}, path string, slug Slug, payload interface{}) error
+	del(path string, slug Slug) error
+	request(result interface{}, method, path string, slug Slug, payload interface{}) error
+	absoluteUrl(path string) (result *url.URL, e error)
+	Secret() string
+}
+
+type TrueClient struct {
 	http    *http.Client
 	baseURL *url.URL // https://api.getstream.io/api/
 
@@ -19,7 +30,11 @@ type Client struct {
 	location string // https://location-api.getstream.io/api/
 }
 
-func Connect(key, secret, appID, location string) *Client {
+func (c TrueClient) Secret() string {
+	return c.secret
+}
+
+func Connect(key, secret, appID, location string) TrueClient {
 	baseURLStr := "https://api.getstream.io/api/v1.0/"
 	if location != "" {
 		baseURLStr = "https://" + location + "-api.getstream.io/api/v1.0/"
@@ -30,7 +45,7 @@ func Connect(key, secret, appID, location string) *Client {
 		panic(e) // failfast, url shouldn't be invalid anyway.
 	}
 
-	return &Client{
+	return TrueClient{
 		http:    &http.Client{},
 		baseURL: baseURL,
 
@@ -41,28 +56,28 @@ func Connect(key, secret, appID, location string) *Client {
 	}
 }
 
-func (c *Client) BaseURL() *url.URL { return c.baseURL }
+func (c TrueClient) BaseURL() *url.URL { return c.baseURL }
 
-func (c *Client) Feed(slug, id string) *Feed {
+func (c TrueClient) Feed(slug, id string) *Feed {
 	return &Feed{
 		Client: c,
 		slug:   SignSlug(c.secret, Slug{slug, id, ""}),
 	}
 }
 
-func (c *Client) get(result interface{}, path string, slug Slug, opt *Options) error {
+func (c TrueClient) get(result interface{}, path string, slug Slug, opt *Options) error {
 	return c.request(result, "GET", path, slug, nil)
 }
 
-func (c *Client) post(result interface{}, path string, slug Slug, payload interface{}) error {
+func (c TrueClient) post(result interface{}, path string, slug Slug, payload interface{}) error {
 	return c.request(result, "POST", path, slug, payload)
 }
 
-func (c *Client) del(path string, slug Slug) error {
+func (c TrueClient) del(path string, slug Slug) error {
 	return c.request(nil, "DELETE", path, slug, nil)
 }
 
-func (c *Client) request(result interface{}, method, path string, slug Slug, payload interface{}) error {
+func (c TrueClient) request(result interface{}, method, path string, slug Slug, payload interface{}) error {
 	absUrl, e := c.absoluteUrl(path)
 	if e != nil {
 		return e
@@ -117,7 +132,7 @@ func (c *Client) request(result interface{}, method, path string, slug Slug, pay
 	return nil
 }
 
-func (c *Client) absoluteUrl(path string) (result *url.URL, e error) {
+func (c TrueClient) absoluteUrl(path string) (result *url.URL, e error) {
 	if result, e = url.Parse(path); e != nil {
 		return nil, e
 	}
