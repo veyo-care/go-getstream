@@ -18,10 +18,6 @@ type Activity struct {
 	ForeignID  string     `json:"foreign_id,omitempty"`
 }
 
-func (a Activity) String() string {
-	return a.ActorData.FirstName + " " + a.ActorData.LastName
-}
-
 type Follow struct {
 	Target             string `json:"target"`
 	ActivityCopyResult int    `json:"activity_copy_limit,omitempty"`
@@ -29,27 +25,27 @@ type Follow struct {
 
 type ObjectData struct {
 	ID         string `json:"id"`
-	Name       string `json:"name"`
+	Name       string `json:"name,omitempty"`
 	Text       string `json:"text,omitempty"`
 	PictureURL string `json:"picture_url,omitempty"`
 }
 
 type TargetData struct {
 	ID       string   `json:"id"`
-	Name     string   `json:"name"`
+	Name     string   `json:"name,omitempty"`
 	Location Location `json:"location,omitempty"`
 }
 
 type Location struct {
-	Name      string `json:"name"`
+	Name      string `json:"name,omitempty"`
 	Longitude string `json:"long,omitempty"`
 	Latitude  string `json:"lat,omitempty"`
 }
 
 type ActorData struct {
-	FirstName string `json:"firstname"`
-	LastName  string `json:"lastname"`
-	ID        string `json:"id"`
+	Name     string `json:"name,omitempty"`
+	NickName string `json:"lastname,omitempty"`
+	ID       string `json:"id"`
 }
 
 type ActivitiesResult struct {
