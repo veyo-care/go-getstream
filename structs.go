@@ -44,7 +44,7 @@ type Location struct {
 
 type ActorData struct {
 	Name     string `json:"name,omitempty"`
-	NickName string `json:"lastname,omitempty"`
+	NickName string `json:"nickname,omitempty"`
 	ID       string `json:"id"`
 }
 
