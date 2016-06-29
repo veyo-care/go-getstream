@@ -18,7 +18,7 @@ func (c FakeClient) Secret() string {
 
 func FakeConnect() *FakeClient {
 	v := make(map[string]map[string]map[string]*Activity)
-	v["Test"] = make(map[string]map[string]*Activity) //only one type of feed
+	v["Patient"] = make(map[string]map[string]*Activity) //only one type of feed
 	return &FakeClient{
 		values: v,
 	}
