@@ -12,9 +12,9 @@ import (
 type Client interface {
 	BaseURL() *url.URL
 	Feed(slug, id string) *Feed
-	get(result interface{}, path string, slug Slug, opt *Options) error
-	post(result interface{}, path string, slug Slug, payload interface{}) error
-	del(path string, slug Slug) error
+	Get(result interface{}, path string, slug Slug, opt *Options) error
+	Post(result interface{}, path string, slug Slug, payload interface{}) error
+	Del(path string, slug Slug) error
 	Secret() string
 }
 
@@ -63,15 +63,15 @@ func (c TrueClient) Feed(slug, id string) *Feed {
 	}
 }
 
-func (c TrueClient) get(result interface{}, path string, slug Slug, opt *Options) error {
+func (c TrueClient) Get(result interface{}, path string, slug Slug, opt *Options) error {
 	return c.request(result, "GET", path, slug, nil)
 }
 
-func (c TrueClient) post(result interface{}, path string, slug Slug, payload interface{}) error {
+func (c TrueClient) Post(result interface{}, path string, slug Slug, payload interface{}) error {
 	return c.request(result, "POST", path, slug, payload)
 }
 
-func (c TrueClient) del(path string, slug Slug) error {
+func (c TrueClient) Del(path string, slug Slug) error {
 	return c.request(nil, "DELETE", path, slug, nil)
 }
 

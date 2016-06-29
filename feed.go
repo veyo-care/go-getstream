@@ -13,7 +13,7 @@ func (f *Feed) AddActivity(activity *Activity) (*Activity, error) {
 	activity = SignActivity(f.Secret(), activity)
 
 	result := &Activity{}
-	e := f.post(result, f.url(), f.slug, activity)
+	e := f.Post(result, f.url(), f.slug, activity)
 	return result, e
 }
 
@@ -30,12 +30,12 @@ func (f *Feed) AddActivities(activities []*Activity) error {
 
 func (f *Feed) Activities(opt *Options) ([]*Activity, error) {
 	result := ActivitiesResult{}
-	e := f.get(&result, f.url(), f.slug, opt)
+	e := f.Get(&result, f.url(), f.slug, opt)
 	return result.Results, e
 }
 
 func (f *Feed) RemoveActivity(id string) error {
-	return f.del(f.url()+id+"/", f.slug)
+	return f.Del(f.url()+id+"/", f.slug)
 }
 
 func (f *Feed) Follow(feed, id string) error {
@@ -43,23 +43,23 @@ func (f *Feed) Follow(feed, id string) error {
 	followedSlug := Slug{feed, id, ""}
 	signedFollowingSlug := SignSlug(f.Secret(), f.slug)
 	data := Follow{Target: followedSlug.String()}
-	e := f.post(nil, f.url()+"following/", signedFollowingSlug, data)
+	e := f.Post(nil, f.url()+"following/", signedFollowingSlug, data)
 	return e
 }
 
 func (f *Feed) Unfollow(feed, id string) error {
-	return f.del(f.url()+"following/"+feed+":"+id+"/", f.slug)
+	return f.Del(f.url()+"following/"+feed+":"+id+"/", f.slug)
 }
 
 func (f *Feed) Following(opt *Options) ([]*Feed, error) {
 	result := FollowersResult{}
-	e := f.get(&result, f.url()+"following/", f.slug, nil)
+	e := f.Get(&result, f.url()+"following/", f.slug, nil)
 	return result.Results, e
 }
 
 func (f *Feed) Followers(opt *Options) ([]*Feed, error) {
 	result := FollowersResult{}
-	e := f.get(&result, f.url()+"followers/", f.slug, nil)
+	e := f.Get(&result, f.url()+"followers/", f.slug, nil)
 	return result.Results, e
 }
 
