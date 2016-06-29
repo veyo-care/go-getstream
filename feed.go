@@ -2,10 +2,10 @@ package getstream
 
 type Feed struct {
 	Client
-	slug Slug
+	Slug Slug
 }
 
-func (f *Feed) Slug() Slug { return f.slug }
+//func (f *Feed) Slug() Slug { return f.Slug }
 
 func (f *Feed) Secret() string { return f.Client.Secret() }
 
@@ -13,7 +13,7 @@ func (f *Feed) AddActivity(activity *Activity) (*Activity, error) {
 	activity = SignActivity(f.Secret(), activity)
 
 	result := &Activity{}
-	e := f.Post(result, f.url(), f.slug, activity)
+	e := f.Post(result, f.url(), f.Slug, activity)
 	return result, e
 }
 
@@ -30,41 +30,41 @@ func (f *Feed) AddActivities(activities []*Activity) error {
 
 func (f *Feed) Activities(opt *Options) ([]*Activity, error) {
 	result := ActivitiesResult{}
-	e := f.Get(&result, f.url(), f.slug, opt)
+	e := f.Get(&result, f.url(), f.Slug, opt)
 	return result.Results, e
 }
 
 func (f *Feed) RemoveActivity(id string) error {
-	return f.Del(f.url()+id+"/", f.slug)
+	return f.Del(f.url()+id+"/", f.Slug)
 }
 
 func (f *Feed) Follow(feed, id string) error {
 
 	followedSlug := Slug{feed, id, ""}
-	signedFollowingSlug := SignSlug(f.Secret(), f.slug)
+	signedFollowingSlug := SignSlug(f.Secret(), f.Slug)
 	data := Follow{Target: followedSlug.String()}
 	e := f.Post(nil, f.url()+"following/", signedFollowingSlug, data)
 	return e
 }
 
 func (f *Feed) Unfollow(feed, id string) error {
-	return f.Del(f.url()+"following/"+feed+":"+id+"/", f.slug)
+	return f.Del(f.url()+"following/"+feed+":"+id+"/", f.Slug)
 }
 
 func (f *Feed) Following(opt *Options) ([]*Feed, error) {
 	result := FollowersResult{}
-	e := f.Get(&result, f.url()+"following/", f.slug, nil)
+	e := f.Get(&result, f.url()+"following/", f.Slug, nil)
 	return result.Results, e
 }
 
 func (f *Feed) Followers(opt *Options) ([]*Feed, error) {
 	result := FollowersResult{}
-	e := f.Get(&result, f.url()+"followers/", f.slug, nil)
+	e := f.Get(&result, f.url()+"followers/", f.Slug, nil)
 	return result.Results, e
 }
 
 func (f *Feed) url() string {
-	return "feed/" + f.slug.Slug + "/" + f.slug.ID + "/"
+	return "feed/" + f.Slug.Slug + "/" + f.Slug.ID + "/"
 }
 
 func (f *Feed) Empty() error {

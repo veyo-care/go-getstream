@@ -59,7 +59,7 @@ func (c TrueClient) BaseURL() *url.URL { return c.baseURL }
 func (c TrueClient) Feed(slug, id string) *Feed {
 	return &Feed{
 		Client: c,
-		slug:   SignSlug(c.secret, Slug{slug, id, ""}),
+		Slug:   SignSlug(c.secret, Slug{slug, id, ""}),
 	}
 }
 
