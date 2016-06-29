@@ -10,7 +10,6 @@ import (
 )
 
 type Client interface {
-	BaseURL() *url.URL
 	Feed(slug, id string) *Feed
 	Get(result interface{}, path string, slug Slug, opt *Options) error
 	Post(result interface{}, path string, slug Slug, payload interface{}) error
