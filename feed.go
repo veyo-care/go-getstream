@@ -1,8 +1,8 @@
 package getstream
 
 type Feed struct {
-	Client
-	Slug Slug
+	Client Client
+	Slug   Slug
 }
 
 //func (f *Feed) Slug() Slug { return f.Slug }
@@ -13,7 +13,7 @@ func (f *Feed) AddActivity(activity *Activity) (*Activity, error) {
 	activity = SignActivity(f.Secret(), activity)
 
 	result := &Activity{}
-	e := f.Post(result, f.url(), f.Slug, activity)
+	e := f.Client.Post(result, f.url(), f.Slug, activity)
 	return result, e
 }
 
@@ -30,12 +30,12 @@ func (f *Feed) AddActivities(activities []*Activity) error {
 
 func (f *Feed) Activities(opt *Options) ([]*Activity, error) {
 	result := ActivitiesResult{}
-	e := f.Get(&result, f.url(), f.Slug, opt)
+	e := f.Client.Get(&result, f.url(), f.Slug, opt)
 	return result.Results, e
 }
 
 func (f *Feed) RemoveActivity(id string) error {
-	return f.Del(f.url()+id+"/", f.Slug)
+	return f.Client.Del(f.url()+id+"/", f.Slug)
 }
 
 func (f *Feed) Follow(feed, id string) error {
@@ -43,23 +43,23 @@ func (f *Feed) Follow(feed, id string) error {
 	followedSlug := Slug{feed, id, ""}
 	signedFollowingSlug := SignSlug(f.Secret(), f.Slug)
 	data := Follow{Target: followedSlug.String()}
-	e := f.Post(nil, f.url()+"following/", signedFollowingSlug, data)
+	e := f.Client.Post(nil, f.url()+"following/", signedFollowingSlug, data)
 	return e
 }
 
 func (f *Feed) Unfollow(feed, id string) error {
-	return f.Del(f.url()+"following/"+feed+":"+id+"/", f.Slug)
+	return f.Client.Del(f.url()+"following/"+feed+":"+id+"/", f.Slug)
 }
 
 func (f *Feed) Following(opt *Options) ([]*Feed, error) {
 	result := FollowersResult{}
-	e := f.Get(&result, f.url()+"following/", f.Slug, nil)
+	e := f.Client.Get(&result, f.url()+"following/", f.Slug, nil)
 	return result.Results, e
 }
 
 func (f *Feed) Followers(opt *Options) ([]*Feed, error) {
 	result := FollowersResult{}
-	e := f.Get(&result, f.url()+"followers/", f.Slug, nil)
+	e := f.Client.Get(&result, f.url()+"followers/", f.Slug, nil)
 	return result.Results, e
 }
 
