@@ -15,8 +15,6 @@ type Client interface {
 	get(result interface{}, path string, slug Slug, opt *Options) error
 	post(result interface{}, path string, slug Slug, payload interface{}) error
 	del(path string, slug Slug) error
-	request(result interface{}, method, path string, slug Slug, payload interface{}) error
-	absoluteUrl(path string) (result *url.URL, e error)
 	Secret() string
 }
 
