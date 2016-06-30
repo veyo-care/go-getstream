@@ -3,6 +3,7 @@ package getstream
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -23,6 +24,8 @@ func FakeConnect() *FakeClient {
 		values: v,
 	}
 }
+
+func (c FakeClient) BaseURL() *url.URL { return nil }
 
 func newFeed(client FakeClient, slug Slug) *Feed {
 	return &Feed{
@@ -102,7 +105,7 @@ func parse(s string) parsedPath {
 		feeds: split[1],
 		feed:  split[2],
 	}
-	if len(split) == 4 {
+	if len(split) >= 4 {
 		p.ActivityID = split[3]
 	}
 	return p

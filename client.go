@@ -15,6 +15,7 @@ type Client interface {
 	Post(result interface{}, path string, slug Slug, payload interface{}) error
 	Del(path string, slug Slug) error
 	Secret() string
+	BaseURL() *url.URL
 }
 
 type TrueClient struct {
