@@ -19,7 +19,8 @@ func (c FakeClient) Secret() string {
 
 func FakeConnect() *FakeClient {
 	v := make(map[string]map[string]map[string]*Activity)
-	v["Patient"] = make(map[string]map[string]*Activity) //only one type of feed
+	v["Patient"] = make(map[string]map[string]*Activity) //only 2 types of feed
+	v["Notification"] = make(map[string]map[string]*Activity)
 	return &FakeClient{
 		values: v,
 	}
@@ -74,7 +75,7 @@ func (c FakeClient) Post(result interface{}, path string, slug Slug, payload int
 	}
 	feeds, ok := c.values[parsedPath.feeds]
 	if !ok {
-		return fmt.Errorf("Should post in Patient")
+		return fmt.Errorf("Should post in Patient or Notification")
 	}
 	_, ok = feeds[parsedPath.feed]
 	if !ok {
