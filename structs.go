@@ -5,17 +5,19 @@ import (
 )
 
 type Activity struct {
-	ID         string     `json:"id,omitempty"`
-	ActorData  ActorData  `json:"actor_data,omitempty"`
-	Actor      Slug       `json:"actor"`
-	Verb       string     `json:"verb"`
-	ObjectData ObjectData `json:"object_data"`
-	Object     Slug       `json:"object"`
-	Target     *Slug      `json:"target,omitempty"`
-	TargetData TargetData `json:"target_data,omitempty"`
-	RawTime    string     `json:"time,omitempty"`
-	To         []Slug     `json:"to,omitempty"`
-	ForeignID  string     `json:"foreign_id,omitempty"`
+	ID        string `json:"id,omitempty"`
+	Actor     Slug   `json:"actor"`
+	Verb      string `json:"verb"`
+	Object    Slug   `json:"object"`
+	Target    *Slug  `json:"target,omitempty"`
+	RawTime   string `json:"time,omitempty"`
+	To        []Slug `json:"to,omitempty"`
+	ForeignID string `json:"foreign_id,omitempty"`
+	//bonus fields
+	ActorData        ActorData        `json:"actor_data,omitempty"`
+	ObjectData       ObjectData       `json:"object_data"`
+	TargetData       TargetData       `json:"target_data,omitempty"`
+	NotificationData NotificationData `json:"notification_data,omitempty"`
 }
 
 type Follow struct {
@@ -46,6 +48,11 @@ type ActorData struct {
 	Name     string `json:"name,omitempty"`
 	Nickname string `json:"nickname,omitempty"`
 	ID       string `json:"id"`
+}
+
+type NotificationData struct {
+	AccountID   string
+	GeneratorID string
 }
 
 type ActivitiesResult struct {
