@@ -68,6 +68,7 @@ func (c FakeClient) Post(result interface{}, path string, slug Slug, payload int
 	parsedPath := parse(path)
 
 	activity, ok := payload.(*Activity)
+	activity.ID = activity.ForeignID
 	if !ok {
 		return fmt.Errorf("FakeClient can only receive activity")
 	}

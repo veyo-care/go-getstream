@@ -1,6 +1,9 @@
 package getstream
 
-import "os"
+import (
+	"os"
+	"time"
+)
 
 var (
 	TestAPIKey    = os.Getenv("GETSTREAM_KEY")
@@ -18,5 +21,6 @@ func NewTestActivity() *Activity {
 		Verb:       "add",
 		ObjectData: ObjectData{ID: "id", Name: "object"},
 		Object:     Slug{"object", "id", ""},
+		RawTime:    time.Now().Format(time.RFC3339),
 	}
 }
